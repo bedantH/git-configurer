@@ -33,3 +33,6 @@ Application present in system tray: \
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Releases
+Checkout releases to download `.exe` file for your use
