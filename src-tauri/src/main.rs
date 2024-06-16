@@ -37,13 +37,25 @@ fn show_window(app: &AppHandle<Wry>) {
   };
 }
 
+fn close_window(app: &AppHandle<Wry>) {
+  match app.get_window("main") {
+    Some(window) => {
+      window.close().unwrap();
+    }
+    _ => {
+      // Error
+    }
+  }
+}
+
 
 fn create_tray() -> SystemTray {
   // Define menu items for the system tray
   let show = CustomMenuItem::new("show".to_string(), "Show Window");
+  let close = CustomMenuItem::new("close".to_string(), "Exit");
 
   // Create the tray menu with the defined menu items
-  let tray_menu = SystemTrayMenu::new().add_item(show);
+  let tray_menu = SystemTrayMenu::new().add_item(show).add_item(close);
 
   SystemTray::new().with_menu(tray_menu)
 }
@@ -53,6 +65,7 @@ pub fn tray_event_handler(app: &AppHandle, event: SystemTrayEvent) {
       SystemTrayEvent::MenuItemClick { id, .. } => {
           match id.as_str() {
               "show" => show_window(app),
+              "close" => close_window(app),
               _ => {}
           }
       }
