@@ -2,10 +2,11 @@
   import { get } from "svelte/store";
   import ConfigDialog from "../components/config-dialog.svelte";
   import type { IConfig } from "../interface/config";
-  import { activeConfig, availableConfigs, setActiveConfig } from "../store/configStore";
+  import { removeConfig, activeConfig, availableConfigs, setActiveConfig } from "../store/configStore";
   import * as RadioGroup from "$lib/components/ui/radio-group/index";
   import Button from "$lib/components/ui/button/button.svelte";
   import { invoke } from "@tauri-apps/api/tauri";
+  import Icon from '@iconify/svelte';
 
   let allConfigs: IConfig[] = get(availableConfigs)
   let active: IConfig = get(activeConfig)
@@ -23,6 +24,10 @@
       username: active.username,
       email: active.email
     })
+  }
+
+  function handleDeleteConfig(name: string) {
+    removeConfig(name)
   }
 </script>
 
@@ -47,9 +52,17 @@
           }}
         >  
           {#each allConfigs as config}
-            <div class="flex items-center gap-2 border-[1.1px] border-solid border-gray-300 py-3 px-2 rounded-md">
-              <RadioGroup.Item value={config.username} />
-              <p class="text-sm">{config.username}</p>
+            <div class="flex justify-between items-center border-[1.1px] border-solid border-gray-300 py-3 px-3 rounded-md">
+              <div class="flex items-center gap-2">
+                <RadioGroup.Item value={config.username} />
+                <p class="text-sm">{config.username}</p>
+              </div>
+
+              <Button variant="ghost" class="text-md w-fit h-fit py-0 px-0" on:click={() => {
+                handleDeleteConfig(config.username)
+              }}>
+                <Icon icon="mynaui:trash-one" />
+              </Button>
             </div>
           {/each}
         </RadioGroup.Root>
